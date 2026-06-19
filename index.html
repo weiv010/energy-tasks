@@ -390,7 +390,7 @@ function cardHTML(t) {
 // ── 렌더 ──
 function getVisibleTodos() {
   let items = tasks.filter(t => t.status !== 'done');
-  if (activeFilter !== 'all') items = items.filter(t => t.energy === parseInt(activeFilter));
+  if (activeFilter !== 'all') items = items.filter(t => t.energy <= parseInt(activeFilter));
   return items;
 }
 
