@@ -12,8 +12,8 @@ function popupHtml(p: Place) {
   return `<div style="min-width:150px">
     <div style="font-family:Gaegu,cursive;font-size:19px;font-weight:700">${esc(p.emoji)} ${esc(p.name)}</div>
     ${p.description ? `<div style="font-size:13px;margin-top:2px">${esc(p.description)}</div>` : ''}
-    ${p.address ? `<div style="font-size:12px;color:#A39588;margin-top:4px">${esc(p.address)}</div>` : ''}
-    <a href="${kakao}" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:6px;font-size:12px;color:#D97870">카카오맵에서 보기 →</a>
+    ${p.address ? `<div style="font-size:12px;color:#7A8DA8;margin-top:4px">${esc(p.address)}</div>` : ''}
+    <a href="${kakao}" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:6px;font-size:12px;color:#D7193A">카카오맵에서 보기 →</a>
   </div>`;
 }
 

@@ -4,11 +4,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        cream: '#FFF9F0',
-        berry: { DEFAULT: '#D97870', soft: '#F6DEDA', dark: '#B85E57' },
-        sage: { DEFAULT: '#9BAE91', soft: '#E4EBDF', dark: '#6F8466' },
-        butter: { DEFAULT: '#F2D88B', soft: '#FBF1D2' },
-        cocoa: { DEFAULT: '#65564B', soft: '#A39588', line: '#EADFD3' },
+        cream: '#F3F9FD',
+        berry: { DEFAULT: '#D7193A', soft: '#FDE4E8', dark: '#AE0F2B' },
+        sage: { DEFAULT: '#4F9BD0', soft: '#E1F0FA', dark: '#2873AB' },
+        butter: { DEFAULT: '#9CD2F0', soft: '#E9F6FD' },
+        cocoa: { DEFAULT: '#22395A', soft: '#7A8DA8', line: '#CFE4F2' },
       },
       fontFamily: {
         hand: ['Gaegu', 'cursive'],

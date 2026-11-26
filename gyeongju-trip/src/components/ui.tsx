@@ -19,13 +19,13 @@ export function Star({ className = '', size = 14 }: { className?: string; size?:
 export function Tree({ size = 40 }: { size?: number }) {
   return (
     <svg width={size} height={size * 1.15} viewBox="0 0 40 46" aria-hidden>
-      <path d="M20 3l2 4h-4z" fill="#F2D88B" />
-      <path d="M20 6L9 20h6L6 32h8L4 42h32L26 32h8l-9-12h6z" fill="#9BAE91" />
-      <path d="M12 26c5 2 11 2 16-1M10 36c7 3 14 3 21-1" stroke="#D97870" strokeWidth="1.6" fill="none" strokeLinecap="round" />
-      <circle cx="16" cy="18" r="1.6" fill="#F2D88B" />
-      <circle cx="25" cy="29" r="1.6" fill="#FFF9F0" />
-      <circle cx="14" cy="38" r="1.6" fill="#F2D88B" />
-      <rect x="17" y="42" width="6" height="4" rx="1" fill="#65564B" />
+      <path d="M20 3l2 4h-4z" fill="#D7193A" />
+      <path d="M20 6L9 20h6L6 32h8L4 42h32L26 32h8l-9-12h6z" fill="#4F9BD0" />
+      <path d="M12 26c5 2 11 2 16-1M10 36c7 3 14 3 21-1" stroke="#D7193A" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+      <circle cx="16" cy="18" r="1.6" fill="#FFFFFF" />
+      <circle cx="25" cy="29" r="1.6" fill="#F3F9FD" />
+      <circle cx="14" cy="38" r="1.6" fill="#D7193A" />
+      <rect x="17" y="42" width="6" height="4" rx="1" fill="#22395A" />
     </svg>
   );
 }
@@ -33,9 +33,9 @@ export function Tree({ size = 40 }: { size?: number }) {
 export function Ribbon({ className = '' }: { className?: string }) {
   return (
     <svg className={className} width="34" height="22" viewBox="0 0 34 22" aria-hidden>
-      <path d="M17 9C12 1 3 2 4 8s8 5 13 1zM17 9c5-8 14-7 13-1s-8 5-13 1z" fill="#D97870" />
-      <path d="M15 10l-5 11 4-2 2 3 1-12zM19 10l5 11-4-2-2 3-1-12z" fill="#D97870" opacity=".85" />
-      <circle cx="17" cy="9.5" r="2.6" fill="#B85E57" />
+      <path d="M17 9C12 1 3 2 4 8s8 5 13 1zM17 9c5-8 14-7 13-1s-8 5-13 1z" fill="#D7193A" />
+      <path d="M15 10l-5 11 4-2 2 3 1-12zM19 10l5 11-4-2-2 3-1-12z" fill="#D7193A" opacity=".85" />
+      <circle cx="17" cy="9.5" r="2.6" fill="#AE0F2B" />
     </svg>
   );
 }
@@ -43,10 +43,10 @@ export function Ribbon({ className = '' }: { className?: string }) {
 export function Gift({ size = 22 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden>
-      <rect x="3" y="9" width="18" height="12" rx="2.5" fill="#F2D88B" />
-      <rect x="2" y="6.5" width="20" height="4" rx="1.5" fill="#D97870" />
-      <rect x="10.5" y="6.5" width="3" height="14.5" fill="#D97870" />
-      <path d="M12 6.5C9 2 5.5 3.5 7 6.5zM12 6.5c3-4.5 6.5-3 5 0z" fill="#9BAE91" />
+      <rect x="3" y="9" width="18" height="12" rx="2.5" fill="#9CD2F0" />
+      <rect x="2" y="6.5" width="20" height="4" rx="1.5" fill="#D7193A" />
+      <rect x="10.5" y="6.5" width="3" height="14.5" fill="#D7193A" />
+      <path d="M12 6.5C9 2 5.5 3.5 7 6.5zM12 6.5c3-4.5 6.5-3 5 0z" fill="#AE0F2B" />
     </svg>
   );
 }
