@@ -87,7 +87,7 @@ function check<T>(res: { data: T; error: { message: string } | null }): T {
 
 export class SupabaseBackend implements Backend {
   kind = 'supabase' as const;
-  constructor(private userId: string) {}
+  constructor(readonly userId: string) {}
 
   async load(): Promise<TripData> {
     const sb = supabase();
@@ -117,16 +117,8 @@ export class SupabaseBackend implements Backend {
 
   /** 첫 로그인 시 기본 여행 데이터를 서버에 생성 */
   private async seed() {
-    const sb = supabase();
-    const s = createSeed();
-    check(await sb.from('trips').insert({ ...s.trip, owner_id: this.userId }));
-    check(await sb.from('places').insert(s.places));
-    check(await sb.from('checklist_categories').insert(s.categories));
-    await Promise.all([
-      sb.from('schedule_items').insert(s.schedule),
-      sb.from('budget_items').insert(s.budget),
-      sb.from('checklist_items').insert(s.checklist),
-    ]).then((rs) => rs.forEach(check));
+    // DB 함수 안에서 하나의 트랜잭션으로 생성 → 중간 실패 시 반쪽 데이터가 남지 않음
+    check(await supabase().rpc('create_trip_with_data', { p_data: createSeed() }));
   }
 
   async updateTrip(id: string, patch: Partial<Trip>) {

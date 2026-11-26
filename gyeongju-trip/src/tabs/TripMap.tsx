@@ -47,12 +47,27 @@ export default function TripMap({
     }).addTo(m);
     layer.current = L.layerGroup().addTo(m);
     map.current = m;
-    const ro = new ResizeObserver(() => m.invalidateSize());
+    let alive = true;
+    let raf = 0;
+    const ro = new ResizeObserver(() => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => alive && m.invalidateSize({ pan: false }));
+    });
     ro.observe(el.current);
     return () => {
+      // 애니메이션 중에 지도가 제거되면 Leaflet 이 _leaflet_pos 오류를 내므로 먼저 멈춘다
+      alive = false;
+      cancelAnimationFrame(raf);
       ro.disconnect();
+      m.stop();
+      // Leaflet 은 확대 애니메이션 종료를 250ms 타이머로 처리하는데(핸들 미보관), 그 전에 제거되면 오류가 난다
+      (m as unknown as { _onZoomTransitionEnd: () => void })._onZoomTransitionEnd = () => {};
+      m.closePopup();
+      m.off();
       m.remove();
       map.current = null;
+      layer.current = null;
+      markers.current.clear();
     };
   }, []);
 
@@ -81,8 +96,8 @@ export default function TripMap({
     const sig = located.map((p) => `${p.id}:${p.lat},${p.lng}`).join('|');
     if (sig !== lastFit.current) {
       lastFit.current = sig;
-      if (located.length > 1) m.fitBounds(L.latLngBounds(located.map((p) => [p.lat!, p.lng!])), { padding: [40, 40], maxZoom: 16 });
-      else if (located.length === 1) m.setView([located[0].lat!, located[0].lng!], 16);
+      if (located.length > 1) m.fitBounds(L.latLngBounds(located.map((p) => [p.lat!, p.lng!])), { padding: [40, 40], maxZoom: 16, animate: false });
+      else if (located.length === 1) m.setView([located[0].lat!, located[0].lng!], 16, { animate: false });
     }
   }, [places, activeId]);
 
