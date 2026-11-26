@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    @apply bg-cream text-cocoa font-body antialiased;
+    background-color: #FFF9F0;
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(217, 120, 112, 0.10) 1px, transparent 0);
+    background-size: 22px 22px;
+    min-height: 100vh;
+  }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  input, select, textarea { font-size: 16px; } /* iOS 확대 방지 */
+}
+
+@layer components {
+  .card { @apply bg-white rounded-card border border-cocoa-line; }
+  .hand { @apply font-hand; }
+  .chip { @apply inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs leading-5; }
+  .btn { @apply inline-flex items-center justify-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition active:scale-[0.97] disabled:opacity-50 disabled:active:scale-100; }
+  .btn-primary { @apply btn bg-berry text-white hover:bg-berry-dark; }
+  .btn-ghost { @apply btn border border-cocoa-line bg-white text-cocoa hover:bg-cream; }
+  .btn-sage { @apply btn bg-sage text-white hover:bg-sage-dark; }
+  .icon-btn { @apply inline-flex h-8 w-8 items-center justify-center rounded-full text-cocoa-soft transition hover:bg-cream hover:text-cocoa active:scale-90 disabled:opacity-30; }
+  .field { @apply w-full rounded-2xl border border-cocoa-line bg-cream/60 px-3.5 py-2.5 outline-none transition focus:border-berry focus:bg-white; }
+  .label { @apply mb-1 block text-xs font-medium text-cocoa-soft; }
+}
+
+/* 체크박스 */
+.check {
+  appearance: none; -webkit-appearance: none;
+  width: 24px; height: 24px; flex: none;
+  border: 1.5px solid #D9CBBE; border-radius: 9px; background: #fff;
+  display: inline-grid; place-content: center; cursor: pointer;
+  transition: background .15s, border-color .15s, transform .1s;
+}
+.check::after {
+  content: ''; width: 11px; height: 6px;
+  border-left: 2.5px solid #fff; border-bottom: 2.5px solid #fff;
+  transform: rotate(-45deg) translate(1px, -1px) scale(0); transition: transform .15s;
+}
+.check:checked { background: #9BAE91; border-color: #9BAE91; }
+.check:checked::after { transform: rotate(-45deg) translate(1px, -1px) scale(1); }
+.check:active:not(:disabled) { transform: scale(.9); }
+.check:disabled { cursor: default; opacity: .85; }
+.check.berry:checked { background: #D97870; border-color: #D97870; }
+
+/* Leaflet 마커 */
+.trip-marker { background: none; border: none; }
+.trip-marker .pin {
+  display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -100%);
+  position: absolute; left: 0; top: 0; white-space: nowrap;
+}
+.trip-marker .bubble {
+  width: 38px; height: 38px; border-radius: 50% 50% 50% 4px; transform: rotate(-45deg);
+  background: #fff; border: 2px solid #D97870; display: grid; place-items: center;
+}
+.trip-marker .bubble span { transform: rotate(45deg); font-size: 19px; line-height: 1; }
+.trip-marker .name {
+  margin-top: 4px; font-family: Gaegu, cursive; font-weight: 700; font-size: 13px; color: #65564B;
+  background: rgba(255,249,240,.95); border: 1px solid #EADFD3; border-radius: 999px; padding: 0 7px;
+}
+.trip-marker.active .bubble { background: #F2D88B; border-color: #65564B; }
+.leaflet-popup-content-wrapper { border-radius: 18px !important; border: 1px solid #EADFD3; box-shadow: 0 4px 14px rgba(101,86,75,.12) !important; }
+.leaflet-popup-content { margin: 12px 16px !important; font-family: 'Gowun Dodum', sans-serif; color: #65564B; }
+.leaflet-container { font-family: 'Gowun Dodum', sans-serif; background: #F4EEE4; }
+.picking .leaflet-container { cursor: crosshair; }
+
+/* 눈 내리는 장식 */
+@keyframes floaty { 0%,100% { transform: translateY(0) rotate(0) } 50% { transform: translateY(-3px) rotate(8deg) } }
+.floaty { animation: floaty 4s ease-in-out infinite; }
+@keyframes pop { 0% { transform: scale(.9); opacity: 0 } 100% { transform: scale(1); opacity: 1 } }
+.pop { animation: pop .18s ease-out; }
+@keyframes sheet { from { transform: translateY(24px); opacity: .4 } to { transform: none; opacity: 1 } }
+.sheet-in { animation: sheet .2s ease-out; }
+@media (prefers-reduced-motion: reduce) { .floaty, .pop, .sheet-in { animation: none } }
+
+.pb-safe { padding-bottom: max(env(safe-area-inset-bottom), 10px); }
