@@ -39,32 +39,47 @@ const noHorizontalScroll = async (p) => {
 try {
   /* ─────────────── 로컬 미리보기 모드 ─────────────── */
   {
-    const ctx = await browser.newContext(mobile);
+    const ctx = await browser.newContext({ ...mobile, acceptDownloads: true });
     const p = await ctx.newPage();
     watch(p);
-    await step('[로컬] 첫 화면: 제목·날짜·로컬 모드 안내 표시', async () => {
+    await step('[개인] 로그인 없이 바로 사용: 제목·날짜 표시, 공유 버튼 없음', async () => {
       await p.goto(LOCAL + '/');
       await p.getByRole('heading', { name: '장금이들의 경주 여행' }).waitFor();
       await p.getByText('2026.11.29 SUN - 11.30 MON').waitFor();
-      await p.getByText('로컬 미리보기 모드').waitFor();
       assert.equal(await p.getByTestId('schedule-item').count(), 13);
+      assert.equal(await p.getByText('관리자 로그인').count(), 0);
+      assert.equal(await p.getByRole('button', { name: '🔗 여행 공유하기' }).count(), 0);
+      assert.equal(await p.getByRole('button', { name: '👀 공유 화면 미리보기' }).count(), 0);
     });
-    await step('[로컬] 예산 체크 → 새로고침 후 유지', async () => {
+    await step('[개인] 예산 체크 → 새로고침 후 유지', async () => {
       await p.getByRole('navigation').getByRole('button', { name: /예산/ }).click();
       await p.getByLabel('지베르니 호텔 지출 완료').check();
       assert.equal(await money(p, 'budget-spent'), '76,500원');
       await p.reload();
       assert.equal(await money(p, 'budget-remaining'), '223,500원');
     });
-    await step('[로컬] 공유 버튼은 링크 대신 설정 안내를 보여줌 (허위 링크 없음)', async () => {
-      await p.getByRole('button', { name: '🔗 여행 공유하기' }).click();
-      await p.getByText('공유 링크를 만들 수 없어요').waitFor();
-      assert.equal(await p.getByTestId('share-url').count(), 0);
-      await p.getByRole('button', { name: '닫기' }).click();
+    await step('[개인] 백업 저장 → 초기화 → 백업 불러오기로 복원', async () => {
+      await p.getByRole('button', { name: '💾 백업' }).click();
+      const [dl] = await Promise.all([p.waitForEvent('download'), p.getByRole('button', { name: '⬇️ 백업 파일 저장' }).click()]);
+      const path = await dl.path();
+      const json = JSON.parse(await (await import('node:fs/promises')).readFile(path, 'utf8'));
+      assert.equal(json.budget.find((b) => b.title === '지베르니 호텔').spent, true);
+      await p.getByRole('button', { name: '처음 기본 일정으로 초기화' }).click();
+      await p.waitForLoadState('load');
+      await p.getByRole('navigation').getByRole('button', { name: /예산/ }).waitFor();
+      await p.goto(LOCAL + '/#budget');
+      assert.equal(await money(p, 'budget-spent'), '0원');
+      await p.getByRole('button', { name: '💾 백업' }).click();
+      await p.getByLabel('백업 파일 선택').setInputFiles(path);
+      await p.getByTestId('budget-spent').waitFor();
+      await p.waitForFunction(() => document.querySelector('[data-testid=budget-spent]')?.textContent?.includes('76,500'));
     });
-    await step('[로컬] /share/<토큰> 접속 시 설정 필요 안내', async () => {
-      await p.goto(LOCAL + '/share/' + 'a'.repeat(64));
-      await p.getByText('공유 기능이 아직 설정되지 않았어요').waitFor();
+    await step('[개인] 잘못된 백업 파일은 거부', async () => {
+      await p.getByRole('button', { name: '💾 백업' }).click();
+      await p.getByLabel('백업 파일 선택').setInputFiles({ name: 'x.json', mimeType: 'application/json', buffer: Buffer.from('{"hello":1}') });
+      await p.getByText('여행 백업 파일 형식이 아니에요').waitFor();
+      await p.getByRole('button', { name: '닫기' }).click();
+      assert.equal(await money(p, 'budget-spent'), '76,500원');
     });
     await ctx.close();
   }

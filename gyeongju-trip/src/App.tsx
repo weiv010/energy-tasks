@@ -5,6 +5,7 @@ import { useTrip, type TripActions } from './lib/useTrip';
 import TripView from './components/TripView';
 import ShareSheet from './components/ShareSheet';
 import Login from './components/Login';
+import BackupSheet from './components/BackupSheet';
 import { Toast, Tree } from './components/ui';
 
 type ToastState = { message: string; tone: 'info' | 'error'; key: number } | null;
@@ -77,13 +78,16 @@ function Editor({ backend, banner, extraActions }: { backend: Backend; banner?: 
           </>
         }
         headerActions={
-          !preview && (
+          !preview &&
+          (backend.kind === 'local' ? (
+            extraActions
+          ) : (
             <>
               <button className="btn-primary !px-3 !py-1.5 text-xs" onClick={() => setShareOpen(true)}>🔗 여행 공유하기</button>
               <button className="btn-ghost !px-3 !py-1.5 text-xs" onClick={() => setPreview(true)}>👀 공유 화면 미리보기</button>
               {extraActions}
             </>
-          )
+          ))
         }
       />
       <ShareSheet
@@ -97,17 +101,20 @@ function Editor({ backend, banner, extraActions }: { backend: Backend; banner?: 
   );
 }
 
+/** 개인용 모드: 로그인 없이 이 브라우저에 저장 */
 function LocalApp() {
   const backend = useMemo(() => new LocalBackend(), []);
+  const [backupOpen, setBackupOpen] = useState(false);
   return (
-    <Editor
-      backend={backend}
-      banner={
-        <div className="border-b border-butter bg-butter-soft px-4 py-2 text-center text-xs leading-relaxed">
-          🧪 <b>로컬 미리보기 모드</b> — 서버(Supabase)가 연결되지 않아 이 브라우저에만 저장돼요. 다른 기기 동기화와 공유 링크는 설정 후 사용할 수 있어요.
-        </div>
-      }
-    />
+    <>
+      <Editor
+        backend={backend}
+        extraActions={
+          <button className="btn-ghost !px-3 !py-1.5 text-xs" onClick={() => setBackupOpen(true)}>💾 백업</button>
+        }
+      />
+      <BackupSheet open={backupOpen} onClose={() => setBackupOpen(false)} backend={backend} />
+    </>
   );
 }
 

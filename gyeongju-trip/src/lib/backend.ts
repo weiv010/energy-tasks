@@ -50,6 +50,23 @@ export class LocalBackend implements Backend {
   async load() {
     return this.read();
   }
+  /** 백업 파일로 내보낼 전체 데이터 */
+  exportData(): TripData {
+    return this.read();
+  }
+  /** 백업 파일을 불러와 현재 데이터를 교체 */
+  importData(raw: unknown) {
+    const d = raw as TripData;
+    const ok =
+      d && typeof d === 'object' && d.trip && typeof d.trip.id === 'string' &&
+      ['places', 'schedule', 'budget', 'categories', 'checklist'].every((k) => Array.isArray((d as unknown as Record<string, unknown>)[k]));
+    if (!ok) throw new Error('여행 백업 파일 형식이 아니에요');
+    this.write(d);
+  }
+  /** 처음 기본 데이터로 되돌리기 */
+  reset() {
+    this.write(createSeed());
+  }
   async updateTrip(_id: string, patch: Partial<Trip>) {
     const d = this.read();
     d.trip = { ...d.trip, ...patch };
